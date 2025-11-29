@@ -2,8 +2,14 @@ import React from 'react'
 import "../Styles/ContactSupport.css"
 
 function ContactSupport() {
+
+
+
   return (
-    <div>ContactSupport</div>
+    <>
+      <h2>just a test</h2>
+    
+    </>
   )
 }
 
