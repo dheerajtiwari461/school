@@ -154,6 +154,9 @@ function CoursesAcademics() {
     difficultyLevel: true
   })
 
+  // New state for mobile filter toggle
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -168,6 +171,23 @@ function CoursesAcademics() {
         ? currentFilters.filter(item => item !== value)
         : [...currentFilters, value]
       return { ...prev, [category]: newFilters }
+    })
+  }
+
+  // Count active filters
+  const activeFilterCount = 
+    filters.gradeLevels.length + 
+    filters.subjects.length + 
+    filters.programTypes.length + 
+    filters.difficultyLevels.length
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    setFilters({
+      gradeLevels: [],
+      subjects: [],
+      programTypes: [],
+      difficultyLevels: []
     })
   }
 
@@ -189,9 +209,45 @@ function CoursesAcademics() {
 
       {/* Main Content */}
       <div className="courses-content">
+        {/* Mobile Filter Toggle Button */}
+        <button 
+          className="mobile-filter-toggle"
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+        >
+          <span className="filter-icon">⚙️</span>
+          <span>Filters</span>
+          {activeFilterCount > 0 && (
+            <span className="filter-badge">{activeFilterCount}</span>
+          )}
+        </button>
+
+        {/* Filter Overlay for Mobile */}
+        <div 
+          className={`filter-overlay ${isFilterOpen ? 'active' : ''}`}
+          onClick={() => setIsFilterOpen(false)}
+        ></div>
+
         {/* Filter Sidebar */}
-        <aside className="filter-sidebar">
+        <aside className={`filter-sidebar ${isFilterOpen ? 'open' : ''}`}>
+          {/* Mobile Filter Header */}
+          <div className="mobile-filter-header">
+            <h3>Filters</h3>
+            <button 
+              className="close-filter-btn"
+              onClick={() => setIsFilterOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
+
           <h3 className="filter-title">Filter Courses</h3>
+
+          {/* Clear Filters Button */}
+          {activeFilterCount > 0 && (
+            <button className="clear-filters-btn" onClick={clearAllFilters}>
+              Clear All ({activeFilterCount})
+            </button>
+          )}
 
           {/* Grade Level Filter */}
           <div className="filter-section">
@@ -296,6 +352,14 @@ function CoursesAcademics() {
               </div>
             )}
           </div>
+
+          {/* Mobile Apply Button */}
+          <button 
+            className="apply-filters-btn"
+            onClick={() => setIsFilterOpen(false)}
+          >
+            Show {filteredCourses.length} Results
+          </button>
         </aside>
 
         {/* Course Grid */}
